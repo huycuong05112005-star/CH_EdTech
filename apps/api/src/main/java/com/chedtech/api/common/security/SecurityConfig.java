@@ -64,17 +64,23 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/health").permitAll()
                 .requestMatchers("/actuator/health", "/actuator/info").permitAll()
                 .requestMatchers("/actuator/prometheus").permitAll() // Scraped by local Prometheus container
-                // Documentation
-                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                .requestMatchers("/actuator/**").hasAuthority("ROLE_ADMIN")
+                // Documentation: Require ADMIN authority per security policy 2.7
+                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").hasAuthority("ROLE_ADMIN")
                 // Authentication Endpoints
                 .requestMatchers("/api/auth/**").permitAll()
+                // Public Drawings for Guests
+                .requestMatchers(HttpMethod.GET, "/api/drawings/public").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/drawings/*").permitAll()
+                // WebSocket Handshake
+                .requestMatchers("/ws-geometry/**").permitAll()
                 // Role-Specific Portals
                 .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
                 .requestMatchers("/api/teacher/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_TEACHER")
                 .requestMatchers("/api/student/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_TEACHER", "ROLE_STUDENT")
-                // All other API endpoints require authentication
+                // All other requests require authentication
                 .requestMatchers("/api/**").authenticated()
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 

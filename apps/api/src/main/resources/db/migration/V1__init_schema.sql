@@ -83,10 +83,10 @@ CREATE INDEX idx_audit_actor ON audit_logs(actor_id);
 CREATE INDEX idx_audit_created_at ON audit_logs(created_at);
 
 -- Seed initial test accounts (Passwords hashed with BCrypt, password is: password123)
--- Hash for password123: $2a$12$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy
+-- Hash for password123: $2a$12$8crkpeLIkIoG3GUBCq/p1OzoALdKoeN3XmUO1V7g9KVvArKO/GLdm
 INSERT INTO users (id, email, password_hash, full_name, role, status) VALUES
-('11111111-1111-1111-1111-111111111111', 'admin@chedtech.edu.vn', '$2a$12$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Hệ Thống Quản Trị Viên', 'ROLE_ADMIN', 'ACTIVE'),
-('22222222-2222-2222-2222-222222222222', 'teacher@chedtech.edu.vn', '$2a$12$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Giáo Viên Toán Học', 'ROLE_TEACHER', 'ACTIVE'),
-('33333333-3333-3333-3333-333333333333', 'student@chedtech.edu.vn', '$2a$12$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Học Sinh Chuyên Toán', 'ROLE_STUDENT', 'ACTIVE')
+('11111111-1111-1111-1111-111111111111', 'admin@chedtech.edu.vn', '$2a$12$8crkpeLIkIoG3GUBCq/p1OzoALdKoeN3XmUO1V7g9KVvArKO/GLdm', 'Hệ Thống Quản Trị Viên', 'ROLE_ADMIN', 'ACTIVE'),
+('22222222-2222-2222-2222-222222222222', 'teacher@chedtech.edu.vn', '$2a$12$8crkpeLIkIoG3GUBCq/p1OzoALdKoeN3XmUO1V7g9KVvArKO/GLdm', 'Giáo Viên Toán Học', 'ROLE_TEACHER', 'ACTIVE'),
+('33333333-3333-3333-3333-333333333333', 'student@chedtech.edu.vn', '$2a$12$8crkpeLIkIoG3GUBCq/p1OzoALdKoeN3XmUO1V7g9KVvArKO/GLdm', 'Học Sinh Chuyên Toán', 'ROLE_STUDENT', 'ACTIVE')
 ON CONFLICT (email) DO NOTHING;
 

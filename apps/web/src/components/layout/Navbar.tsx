@@ -1,20 +1,20 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store/authStore';
-import { 
-  Compass, 
-  Globe, 
-  LogIn, 
-  LogOut, 
-  ShieldAlert, 
-  GraduationCap, 
-  BookOpen
+import {
+  Compass,
+  Globe,
+  LogIn,
+  LogOut,
+  Sparkles,
+  LayoutDashboard,
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const { t, i18n } = useTranslation();
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, logout } = useAuthStore();
 
   const toggleLanguage = () => {
@@ -22,82 +22,107 @@ export const Navbar: React.FC = () => {
     i18n.changeLanguage(nextLang);
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
+  const getUserPortalPath = () => {
+    if (!user) return '/login';
+    if (user.role === 'ROLE_ADMIN') return '/admin';
+    if (user.role === 'ROLE_TEACHER') return '/teacher';
+    return '/student';
+  };
+
+  const getUserPortalTitle = () => {
+    if (!user) return '';
+    if (user.role === 'ROLE_ADMIN') return 'Quản Trị Viên';
+    if (user.role === 'ROLE_TEACHER') return 'Lớp Dạy Học';
+    return 'Góc Học Tập';
+  };
+
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-md bg-slate-950/80 border-b border-slate-800">
+    <header className="sticky top-0 z-50 backdrop-blur-md bg-slate-950/90 border-b border-slate-800 font-sans">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Brand */}
         <Link to="/" className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-brand-600 flex items-center justify-center text-white shadow-lg shadow-brand-500/25">
+          <div className="w-9 h-9 rounded-xl bg-primary-600 flex items-center justify-center text-white shadow-lg shadow-primary-600/30">
             <Compass className="w-5 h-5" />
           </div>
           <div>
             <span className="font-extrabold text-white text-lg tracking-tight">CH EdTech</span>
-            <span className="hidden sm:inline-block ml-2 text-[11px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 font-medium">
-              Mathematics & 3D Geometry
+            <span className="hidden sm:inline-block ml-2 text-[11px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 font-medium border border-slate-700/60">
+              Interactive Mathematics
             </span>
           </div>
         </Link>
 
-        {/* Navigation Links */}
-        <nav className="hidden md:flex items-center gap-1 text-sm font-medium">
+        {/* Center / Navigation Links */}
+        <nav className="flex items-center space-x-1 sm:space-x-2 text-sm font-medium">
           <Link
             to="/"
             className={`px-3 py-1.5 rounded-lg transition-colors ${
-              location.pathname === '/' ? 'text-brand-400 bg-brand-500/10' : 'text-slate-300 hover:text-white'
+              location.pathname === '/'
+                ? 'text-primary-400 bg-primary-500/10 font-semibold'
+                : 'text-slate-300 hover:text-white'
             }`}
           >
-            {t('nav.home')}
+            {t('nav.home') || 'Trang chủ'}
           </Link>
+
+          {/* Primary Highlighted Geometry Workspace Button (Guest First!) */}
           <Link
-            to="/student"
-            className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
-              location.pathname === '/student' ? 'text-brand-400 bg-brand-500/10' : 'text-slate-300 hover:text-white'
+            to="/workspace"
+            className={`px-3.5 py-1.5 rounded-xl transition-all flex items-center space-x-1.5 ${
+              location.pathname === '/workspace'
+                ? 'bg-primary-600 text-white shadow-md'
+                : 'bg-primary-500/10 text-primary-300 border border-primary-500/20 hover:bg-primary-500/20'
             }`}
           >
-            <GraduationCap className="w-4 h-4 text-emerald-400" />
-            {t('nav.student')}
+            <Sparkles className="w-3.5 h-3.5 text-primary-400" />
+            <span>Phòng Dựng Hình 3D</span>
           </Link>
-          <Link
-            to="/teacher"
-            className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
-              location.pathname === '/teacher' ? 'text-brand-400 bg-brand-500/10' : 'text-slate-300 hover:text-white'
-            }`}
-          >
-            <BookOpen className="w-4 h-4 text-blue-400" />
-            {t('nav.teacher')}
-          </Link>
-          <Link
-            to="/admin"
-            className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
-              location.pathname === '/admin' ? 'text-brand-400 bg-brand-500/10' : 'text-slate-300 hover:text-white'
-            }`}
-          >
-            <ShieldAlert className="w-4 h-4 text-red-400" />
-            {t('nav.admin')}
-          </Link>
+
+          {/* Authenticated Role Portal Shortcut */}
+          {user && (
+            <Link
+              to={getUserPortalPath()}
+              className={`px-3 py-1.5 rounded-lg transition-colors flex items-center space-x-1.5 ${
+                location.pathname.startsWith(getUserPortalPath())
+                  ? 'text-emerald-400 bg-emerald-500/10 font-semibold'
+                  : 'text-slate-300 hover:text-white'
+              }`}
+            >
+              <LayoutDashboard className="w-4 h-4 text-emerald-400" />
+              <span>{getUserPortalTitle()}</span>
+            </Link>
+          )}
         </nav>
 
-        {/* Actions: Language & Auth */}
+        {/* Right Section: Language Toggle & Auth */}
         <div className="flex items-center gap-3">
-          {/* Language Switcher */}
+          {/* Language Toggle */}
           <button
             onClick={toggleLanguage}
-            className="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 hover:border-slate-700 text-xs font-semibold text-slate-300 flex items-center gap-1.5 transition-all"
+            className="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 transition-colors"
             title="Switch Language"
           >
-            <Globe className="w-3.5 h-3.5 text-brand-400" />
+            <Globe className="w-3.5 h-3.5 text-primary-400" />
             <span className="uppercase">{i18n.language}</span>
           </button>
 
-          {/* Auth State Button */}
+          {/* Auth State */}
           {user ? (
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-300 font-medium hidden sm:inline">
-                {user.fullName}
-              </span>
+            <div className="flex items-center gap-3">
+              <div className="hidden sm:flex flex-col items-end">
+                <span className="text-xs font-bold text-slate-200">{user.fullName}</span>
+                <span className="text-[10px] text-emerald-400 font-mono">
+                  {user.role.replace('ROLE_', '')}
+                </span>
+              </div>
               <button
-                onClick={logout}
-                className="p-2 rounded-lg bg-slate-900 border border-slate-800 hover:border-red-500/30 text-slate-400 hover:text-red-400 transition-colors"
+                onClick={handleLogout}
+                className="p-2 rounded-lg bg-slate-900 border border-slate-800 hover:border-rose-500/40 hover:text-rose-400 text-slate-400 transition-colors"
                 title="Đăng xuất"
               >
                 <LogOut className="w-4 h-4" />
@@ -106,10 +131,10 @@ export const Navbar: React.FC = () => {
           ) : (
             <Link
               to="/login"
-              className="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold flex items-center gap-1.5 shadow-lg shadow-brand-500/20 transition-all"
+              className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 border border-slate-700 transition-all shadow-sm"
             >
-              <LogIn className="w-3.5 h-3.5" />
-              {t('nav.login')}
+              <LogIn className="w-3.5 h-3.5 text-primary-400" />
+              <span>Đăng nhập</span>
             </Link>
           )}
         </div>
@@ -117,4 +142,3 @@ export const Navbar: React.FC = () => {
     </header>
   );
 };
-
