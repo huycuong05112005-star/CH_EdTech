@@ -1,0 +1,44 @@
+{
+  "brand": {
+    "name": "CH EdTech",
+    "tagline": "See Mathematics. Understand Geometry. Learn Smarter."
+  },
+  "nav": {
+    "home": "Home",
+    "geometry": "3D Geometry Studio",
+    "library": "Lesson Library",
+    "docs": "Documentation",
+    "login": "Login",
+    "admin": "Admin Portal",
+    "teacher": "Teacher Portal",
+    "student": "Student Portal"
+  },
+  "hero": {
+    "badge": "Next-Gen Mathematics Learning Platform",
+    "title": "Visualize Spatial Mathematics",
+    "subtitle": "Transform abstract 2D/3D geometric concepts into interactive spatial models powered by mathematical validation and AI pedagogical tools.",
+    "exploreGeometry": "Explore 3D Geometry",
+    "getStarted": "Get Started"
+  },
+  "geometry": {
+    "title": "Spatial Geometry Model",
+    "pyramid": "Pyramid S.ABCD",
+    "cuboid": "Cuboid ABCD.A'B'C'D'",
+    "volume": "Volume",
+    "height": "Height",
+    "baseArea": "Base Area",
+    "rotate": "Rotate 360°",
+    "wireframe": "Wireframe Mode",
+    "transparent": "Transparency"
+  },
+  "system": {
+    "healthTitle": "Infrastructure & Service Telemetry",
+    "database": "PostgreSQL & pgvector Database",
+    "storage": "MinIO Object Storage",
+    "monitoring": "Prometheus & Grafana Telemetry",
+    "healthy": "Healthy & Operational",
+    "degraded": "Degraded",
+    "checking": "Checking..."
+  }
+}
+

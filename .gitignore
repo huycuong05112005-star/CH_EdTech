@@ -1,0 +1,69 @@
+# Environment and Secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.crt
+*.keystore
+
+# Operating System
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# IDE and Editors
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.iml
+
+# Node / Frontend
+node_modules/
+dist/
+dist-ssr/
+*.local
+coverage/
+.turbo/
+.npm/
+
+# Java / Maven
+target/
+*.class
+*.jar
+*.war
+*.ear
+.mvn/wrapper/maven-wrapper.jar
+!apps/api/.mvn/wrapper/maven-wrapper.jar
+
+# Logs and Monitoring data
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Docker & Infrastructure data directories
+.docker-data/
+postgres_data/
+minio_data/
+prometheus_data/
+grafana_data/
+loki_data/
+
+# Python / Security scanner artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+
+# Temporary files
+tmp/
+temp/
+

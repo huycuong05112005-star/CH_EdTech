@@ -1,0 +1,115 @@
+name: ch-edtech
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: ch_edtech_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-ch_edtech_db}
+      POSTGRES_USER: ${POSTGRES_USER:-ch_edtech_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ch_edtech_dev_secret_2026_pass}
+    ports:
+      - "${POSTGRES_PORT:-5434}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infrastructure/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ch_edtech_admin} -d ${POSTGRES_DB:-ch_edtech_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ch_network
+
+  minio:
+    image: cleanstart/minio:latest
+    container_name: ch_edtech_minio
+    restart: unless-stopped
+    user: "0:0"
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${STORAGE_ACCESS_KEY:-minio_dev_admin}
+      MINIO_ROOT_PASSWORD: ${STORAGE_SECRET_KEY:-minio_dev_secret_password_2026}
+    ports:
+      - "${MINIO_API_PORT:-9000}:9000"
+      - "${MINIO_CONSOLE_PORT:-9001}:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:9000/minio/health/live || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - ch_network
+
+  prometheus:
+    image: prom/prometheus:v2.53.0
+    container_name: ch_edtech_prometheus
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    ports:
+      - "${PROMETHEUS_PORT:-9090}:9090"
+    volumes:
+      - ./infrastructure/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - ch_network
+
+  grafana:
+    image: grafana/grafana:11.0.0
+    container_name: ch_edtech_grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin_dev_password_2026}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    ports:
+      - "${GRAFANA_PORT:-3000}:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./infrastructure/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./infrastructure/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./infrastructure/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+      - loki
+    networks:
+      - ch_network
+
+  loki:
+    image: grafana/loki:3.0.0
+    container_name: ch_edtech_loki
+    restart: unless-stopped
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "${LOKI_PORT:-3100}:3100"
+    volumes:
+      - ./infrastructure/loki/loki-config.yml:/etc/loki/local-config.yaml:ro
+      - loki_data:/loki
+    networks:
+      - ch_network
+
+networks:
+  ch_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    name: ch_edtech_postgres_data
+  minio_data:
+    name: ch_edtech_minio_data
+  prometheus_data:
+    name: ch_edtech_prometheus_data
+  grafana_data:
+    name: ch_edtech_grafana_data
+  loki_data:
+    name: ch_edtech_loki_data

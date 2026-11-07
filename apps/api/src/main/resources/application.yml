@@ -1,0 +1,82 @@
+server:
+  port: ${SERVER_PORT:8085}
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: ch-edtech-api
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:development}
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5434/ch_edtech_db}
+    username: ${POSTGRES_USER:ch_edtech_admin}
+    password: ${POSTGRES_PASSWORD:ch_edtech_dev_secret_2026_pass}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 15
+      minimum-idle: 5
+      idle-timeout: 30000
+      connection-timeout: 20000
+      max-lifetime: 1800000
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+# Storage Configuration (MinIO / Cloudflare R2 / S3)
+ch-edtech:
+  storage:
+    provider: ${STORAGE_PROVIDER:minio}
+    endpoint: ${STORAGE_ENDPOINT:http://localhost:9000}
+    region: ${STORAGE_REGION:us-east-1}
+    bucket-documents: ${STORAGE_BUCKET_DOCUMENTS:ch-edtech-documents}
+    bucket-public: ${STORAGE_BUCKET_PUBLIC:ch-edtech-public}
+    access-key: ${STORAGE_ACCESS_KEY:minio_dev_admin}
+    secret-key: ${STORAGE_SECRET_KEY:minio_dev_secret_password_2026}
+    use-path-style: ${STORAGE_USE_PATH_STYLE:true}
+  security:
+    jwt:
+      secret: ${JWT_SECRET:ch_edtech_super_secure_jwt_secret_token_development_environment_key_2026_xyz}
+      expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+      refresh-expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:604800000}
+    cors:
+      allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5175,http://127.0.0.1:5175}
+
+# Actuator & Observability
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    tags:
+      application: ${spring.application.name}
+
+# OpenAPI / Swagger
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: ${SWAGGER_ENABLED:true}
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: ${SWAGGER_ENABLED:true}
+

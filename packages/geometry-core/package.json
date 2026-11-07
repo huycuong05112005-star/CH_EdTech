@@ -1,0 +1,25 @@
+{
+  "name": "@ch-edtech/geometry-core",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Mathematical 2D and 3D computational geometry engine for CH EdTech",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test"
+  },
+  "keywords": [
+    "geometry",
+    "computational-geometry",
+    "3d",
+    "2d",
+    "vector-math",
+    "ch-edtech"
+  ],
+  "author": "CH EdTech Engineering Team",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
+}

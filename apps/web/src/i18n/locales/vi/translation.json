@@ -1,0 +1,44 @@
+{
+  "brand": {
+    "name": "CH EdTech",
+    "tagline": "Nhìn thấy Toán học. Thấu hiểu Hình học. Học thông minh hơn."
+  },
+  "nav": {
+    "home": "Trang chủ",
+    "geometry": "Xưởng Hình Học 3D",
+    "library": "Thư Viện Bài Giảng",
+    "docs": "Tài Liệu & Nghiệp Vụ",
+    "login": "Đăng Nhập",
+    "admin": "Quản Trị Hệ Thống",
+    "teacher": "Không Gian Giáo Viên",
+    "student": "Góc Học Tập Học Sinh"
+  },
+  "hero": {
+    "badge": "Nền Tảng Giáo Dục Toán Học Thế Hệ Mới",
+    "title": "Trực Quan Hóa Không Gian",
+    "subtitle": "Biến các khái niệm hình học 2D/3D trừu tượng thành trải nghiệm tương tác trực quan sống động, được hỗ trợ bởi AI Agent và động cơ hình học chính xác.",
+    "exploreGeometry": "Khám Phá Hình Học 3D",
+    "getStarted": "Bắt Đầu Học Ngay"
+  },
+  "geometry": {
+    "title": "Mô Hình Hình Học Không Gian",
+    "pyramid": "Hình Chóp S.ABCD",
+    "cuboid": "Hình Hộp Chữ Nhật ABCD.A'B'C'D'",
+    "volume": "Thể Tích",
+    "height": "Chiều Cao",
+    "baseArea": "Diện Tích Đáy",
+    "rotate": "Xoay 360°",
+    "wireframe": "Xem Khung Dây",
+    "transparent": "Độ Trong Suốt"
+  },
+  "system": {
+    "healthTitle": "Trạng Thái Hạ Tầng & Dịch Vụ",
+    "database": "Cơ Sở Dữ Liệu PostgreSQL & pgvector",
+    "storage": "Lưu Trữ Object Storage MinIO",
+    "monitoring": "Giám Sát Prometheus & Grafana",
+    "healthy": "Hoạt Động Bình Thường",
+    "degraded": "Gặp Sự Cố",
+    "checking": "Đang Kiểm Tra..."
+  }
+}
+
